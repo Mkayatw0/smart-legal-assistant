@@ -1,21 +1,80 @@
-# smart-legal-assistants using Retrieval Augmented Generation 
+# Smart Legal Assistants using Retrieval Augmented Generation (RAG)
+A scalable, beginner-friendly application for answering legal questions using a document knowledge base with Retrieval-Augmented Generation (RAG).
 
-A scalable Retrieval-Augmented Generation application for answering questions using your document knowledge base.
+## What is RAG?
+Retrieval-Augmented Generation (RAG) is an advanced technique in NLP that combines two key components:
+
+Retrieval: Finds relevant content (e.g., from your uploaded documents).
+
+Generation: Uses a language model (like GPT) to generate a contextual answer based on the retrieved content.
+
+This ensures responses are:
+
+Grounded in facts
+
+Transparent with references
+
+Scalable to your custom knowledge base
+
+## Project Purpose
+To help legal teams or individuals query legal documents in natural language, getting accurate, reference-backed responses — with a user-friendly interface and easily configurable backend.
+
+Even junior data scientists can run, extend, or deploy this project.
 
 ## Features
+ Document Retrieval: Uses vector search (e.g., via Pinecone) to locate the most relevant documents.
 
-- **Document Retrieval**: Efficiently retrieve relevant information from your vector database
-- **Advanced RAG Pipeline**: Modular components for embeddings, retrieval, and response generation
-- **Customizable Prompts**: Multiple prompt templates for different response styles
-- **Query Enhancement**: Optional query expansion and result reranking
-- **User-Friendly Interface**: Clean Streamlit UI with feedback collection
-- **Deployment Ready**: Docker and Render configurations included
+ Modular Pipeline: Each stage (embedding, retrieval, generation) is customizable.
 
-## Setup Instructions
+ Customizable Prompts: Easily change how the model responds using templates.
 
-### Environment Variables
+ Query Enhancement: Optional query expansion + reranking logic to improve relevance.
 
-Create a `.env` file in the root directory with the following variables:
+ Streamlit UI: Clean, interactive frontend for querying and feedback.
+
+ Deployment Ready: Works with Docker or Render for one-click cloud hosting.
+
+## Technologies Used
+**Tool**	**Purpose**
+**Python**:	Main programming language
+**Streamlit**:	Web app interface
+**Pinecone**:	Vector database for semantic search
+**OpenAI/TogetherAI**:	Large language models for response generation
+**Docker**:	Containerization for consistent deployment
+
+## Code Structure
+
+smart-legal-assistants/
+├── src/SmartLegalAssistant/
+│   ├── core/               # Main logic: LLMs, embeddings, retrievers
+│   ├── streamlit_app/      # Streamlit frontend
+│   └── utils/              # Helpers: logger, prompts, error handling
+├── Dockerfile              # Docker config
+├── requirements.txt        # Python dependencies
+├── render.yaml             # Render.com deployment file
+├── .env                    # API key and environment variables
+
+## Getting Started (Step-by-Step)
+### Prerequisites
+Make sure you have:
+
+Python ≥ 3.8
+
+pip (Python package manager)
+
+Git
+
+API Keys for:
+
+Together.ai
+
+Pinecone
+
+### 1. Clone the Repository
+git clone https://github.com/yourusername/rag-assistant.git
+cd rag-assistant
+### 2. Set Up Environment Variables
+Create a .env file in the root:
 
 ```
 TOGETHER_API_KEY=your_together_api_key
@@ -25,70 +84,109 @@ PINECONE_INDEX_NAME=your_pinecone_index_name
 PINECONE_NAMESPACE=optional_namespace
 ```
 
-### Installation
+These control the external services your app connects to.
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/yourusername/rag-assistant.git
-   cd rag-assistant
-   ```
+### 3. Install Dependencies
 
-2. Install dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
+pip install -r requirements.txt
 
-3. Run the application:
-   ```
-   streamlit run app/main.py
-   ```
+This installs all required Python libraries — including: openai, pinecone-client, streamlit, sentence-transformers
+
+### 4. Run the App Locally
+
+streamlit run src/SmartLegalAssistant/streamlit_app/main.py
+Visit http://localhost:8501 in your browser to use the app.
 
 ### Docker Deployment
+Prefer containerization? Here’s how:
 
-1. Build the Docker image:
-   ```
-   docker build -t rag-assistant .
-   ```
+1. Build the Image
+docker build -t rag-assistant .
 
-2. Run the container:
-   ```
-   docker run -p 8501:8501 --env-file .env rag-assistant
-   ```
+2. Run the App
+docker run -p 8501:8501 --env-file .env rag-assistant
 
-### Render Deployment
+This ensures consistency across environments.
 
-1. Connect your GitHub repository to Render
-2. Create a new Web Service using the `render.yaml` configuration
-3. Set the environment variables in the Render dashboard
+### Render Deployment (Cloud Option)
+Push your code to GitHub.
 
-## Project Structure
+Go to Render.com and link your GitHub.
 
-- `app/`: Streamlit application code
-- `core/`: Core RAG components (embeddings, vector store, LLM)
-- `utils/`: Utilities (prompt templates, logging)
-- `Dockerfile`: Docker configuration
-- `render.yaml`: Render deployment configuration
+Choose "New Web Service".
 
-## Customization
+Use the render.yaml provided.
 
-### Adding New Prompt Templates
+Set the .env variables in the Render UI.
 
-Add your custom templates to `utils/prompt_templates.py` by extending the `DEFAULT_TEMPLATES` dictionary.
+## How to Use
+Upload legal documents (PDF, .txt, etc.).
 
-### Using Different Embedding Models
+Ask your legal question in natural language (e.g. "What are the tenant rights in this lease?").
 
-Implement a new embedding model class in `core/embeddings.py` by extending the `EmbeddingModel` base class.
+Get a precise, referenced response from the system.
 
-### Changing Vector Stores
+Submit feedback on responses to help improve the model.
 
-Implement a new vector store in `core/vector_store.py` by extending the `VectorStore` base class.
+### Configuration Guide
+**File**	**What You Can Change**
+prompt_templates.py:	Add/edit prompt response formats
+retriever.py:	Tweak retrieval logic or scoring methods
+reranker.py:	Add reranking models (e.g., Cohere)
+llm.py:	Switch between OpenAI, TogetherAI, etc.
+vector_store.py:	Use Pinecone or other vector DBs
 
-## Advanced Retrieval Techniques
+### Advanced Retrieval Techniques
+Query Expansion: Automatically adds synonyms/related terms to broaden recall.
 
-- **Query Expansion**: Enhances recall by adding related terms to the query
-- **Result Reranking**: Improves precision by reordering results based on relevance
-- **Hybrid Search**: Combines vector and keyword-based search (configurable in settings)
+Result Reranking: Sorts retrieved documents by relevance using another model.
 
-## Feedback and Improvement
+Hybrid Search: Combines keyword + vector search (for best of both worlds).
 
-The system collects user feedback to help improve response quality. Feedback is stored in `logs/feedback/`.
+## Customization Guide
+### Add a Prompt Style
+Edit the dictionary in utils/prompt_templates.py:
+
+
+```python
+DEFAULT_TEMPLATES["legal_summary"] = """
+You are a legal assistant. Summarize the following content professionally:
+{context}
+"""
+```
+
+### Swap Embedding Models
+Create a new class in core/embeddings.py and plug it into the pipeline.
+
+### Use Another Vector Store
+Subclass VectorStore in core/vector_store.py and define your logic (e.g., using FAISS, ChromaDB, etc.).
+
+## Troubleshooting
+Problem	Fix
+ModuleNotFoundError	Activate virtualenv and run pip install -r requirements.txt
+Invalid API Key	Check .env values
+App won’t start	Try: streamlit run src/SmartLegalAssistant/streamlit_app/main.py
+“No documents found” in UI	Upload and index docs before querying
+
+## Contributing
+We welcome contributions from learners and professionals alike!
+
+
+1. Fork and clone the project
+git checkout -b feature/my-feature
+
+2. Make your changes
+git commit -m "Add new feature"
+
+3. Push and open a PR on GitHub
+ - Follow PEP8
+ - Write clear comments and docstrings
+ - Include test cases or examples if possible
+
+## License
+This project is licensed under the MIT License.
+
+## Feedback
+We collect user feedback from the UI to help improve responses. Feedback logs are stored in:
+
+logs/feedback/

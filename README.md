@@ -44,15 +44,7 @@ Even junior data scientists can run, extend, or deploy this project.
 
 ## Code Structure
 
-smart-legal-assistants/
-├── src/SmartLegalAssistant/
-│   ├── core/               # Main logic: LLMs, embeddings, retrievers
-│   ├── streamlit_app/      # Streamlit frontend
-│   └── utils/              # Helpers: logger, prompts, error handling
-├── Dockerfile              # Docker config
-├── requirements.txt        # Python dependencies
-├── render.yaml             # Render.com deployment file
-├── .env                    # API key and environment variables
+![structure](image.png)
 
 ## Getting Started (Step-by-Step)
 ### Prerequisites

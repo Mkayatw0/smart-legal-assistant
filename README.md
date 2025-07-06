@@ -44,7 +44,7 @@ Even junior data scientists can run, extend, or deploy this project.
 
 ## Code Structure
 
-![structure](image.png)
+![structure](image-1.png)
 
 ## Getting Started (Step-by-Step)
 ### Prerequisites

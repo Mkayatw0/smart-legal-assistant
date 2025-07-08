@@ -63,8 +63,13 @@ Together.ai
 Pinecone
 
 ### 1. Clone the Repository
-git clone https://github.com/yourusername/rag-assistant.git
-cd rag-assistant
+
+git clone https://github.com/Mkayatw0/smart-legal-assistant.git
+
+cd smart-legal-assistant
+
+
+
 ### 2. Set Up Environment Variables
 Create a .env file in the root:
 
@@ -87,16 +92,18 @@ This installs all required Python libraries — including: openai, pinecone-clie
 ### 4. Run the App Locally
 
 streamlit run src/SmartLegalAssistant/streamlit_app/main.py
+
+
 Visit http://localhost:8501 in your browser to use the app.
 
 ### Docker Deployment
 Prefer containerization? Here’s how:
 
 1. Build the Image
-docker build -t rag-assistant .
+        docker build -t rag-assistant .
 
 2. Run the App
-docker run -p 8501:8501 --env-file .env rag-assistant
+        docker run -p 8501:8501 --env-file .env rag-assistant
 
 This ensures consistency across environments.
 
@@ -122,11 +129,15 @@ Submit feedback on responses to help improve the model.
 
 ### Configuration Guide
 **File**	**What You Can Change**
-prompt_templates.py:	Add/edit prompt response formats
-retriever.py:	Tweak retrieval logic or scoring methods
-reranker.py:	Add reranking models (e.g., Cohere)
-llm.py:	Switch between OpenAI, TogetherAI, etc.
-vector_store.py:	Use Pinecone or other vector DBs
+1. prompt_templates.py:	Add/edit prompt response formats
+
+2. retriever.py:	Tweak retrieval logic or scoring methods
+
+3. reranker.py:	Add reranking models (e.g., Cohere)
+
+4. llm.py:	Switch between OpenAI, TogetherAI, etc.
+
+5. vector_store.py:	Use Pinecone or other vector DBs
 
 ### Advanced Retrieval Techniques
 Query Expansion: Automatically adds synonyms/related terms to broaden recall.

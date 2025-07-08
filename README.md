@@ -153,7 +153,7 @@ TOGETHER_AI_API_KEY=your_key_here
 ### Issue 4: `ValueError: invalid literal for int() with base 0: '$PORT'`
 **Solution**: This is a config issue, run with explicit port
 ```bash
-streamlit run src/SmartLegalAssistant/streamlit_app/main.py --server.port 8501
+streamlit run src/SmartLegalAssistant/streamlit_app/app.py --server.port 8501
 ```
 
 ### Issue 5: Pinecone index not found

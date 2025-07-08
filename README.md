@@ -4,17 +4,14 @@ A scalable, beginner-friendly application for answering legal questions using a 
 ## What is RAG?
 Retrieval-Augmented Generation (RAG) is an advanced technique in NLP that combines two key components:
 
-Retrieval: Finds relevant content (e.g., from your uploaded documents).
+**Retrieval**: Finds relevant content (e.g., from your uploaded documents).
 
-Generation: Uses a language model (like GPT) to generate a contextual answer based on the retrieved content.
+**Generation**: Uses a language model (like GPT) to generate a contextual answer based on the retrieved content.
 
 This ensures responses are:
-
-Grounded in facts
-
-Transparent with references
-
-Scalable to your custom knowledge base
+- Grounded in facts
+- Transparent with references
+- Scalable to your custom knowledge base
 
 ## Project Purpose
 To help legal teams or individuals query legal documents in natural language, getting accurate, reference-backed responses — with a user-friendly interface and easily configurable backend.
@@ -22,134 +19,195 @@ To help legal teams or individuals query legal documents in natural language, ge
 Even junior data scientists can run, extend, or deploy this project.
 
 ## Features
- Document Retrieval: Uses vector search (e.g., via Pinecone) to locate the most relevant documents.
-
- Modular Pipeline: Each stage (embedding, retrieval, generation) is customizable.
-
- Customizable Prompts: Easily change how the model responds using templates.
-
- Query Enhancement: Optional query expansion + reranking logic to improve relevance.
-
- Streamlit UI: Clean, interactive frontend for querying and feedback.
-
- Deployment Ready: Works with Docker or Render for one-click cloud hosting.
+- **Document Retrieval**: Uses vector search (e.g., via Pinecone) to locate the most relevant documents.
+- **Modular Pipeline**: Each stage (embedding, retrieval, generation) is customizable.
+- **Customizable Prompts**: Easily change how the model responds using templates.
+- **Query Enhancement**: Optional query expansion + reranking logic to improve relevance.
+- **Streamlit UI**: Clean, interactive frontend for querying and feedback.
+- **Deployment Ready**: Works with Docker or Render for one-click cloud hosting.
 
 ## Technologies Used
-**Tool**	**Purpose**
-**Python**:	Main programming language
-**Streamlit**:	Web app interface
-**Pinecone**:	Vector database for semantic search
-**OpenAI/TogetherAI**:	Large language models for response generation
-**Docker**:	Containerization for consistent deployment
+| **Tool** | **Purpose** |
+|----------|-------------|
+| **Python** | Main programming language |
+| **Streamlit** | Web app interface |
+| **Pinecone** | Vector database for semantic search |
+| **TogetherAI** | Large language models for response generation |
+| **Docker** | Containerization for consistent deployment |
 
 ## Code Structure
 
 ![structure](image-1.png)
 
-## Getting Started (Step-by-Step)
+##  Quick Setup Guide
+
 ### Prerequisites
 Make sure you have:
+- Python ≥ 3.8
+- pip (Python package manager)
+- Git
 
-Python ≥ 3.8
-
-pip (Python package manager)
-
-Git
-
-API Keys for:
-
-Together.ai
-
-Pinecone
-
-### 1. Clone the Repository
-
+### Step 1: Clone the Repository
+```bash
 git clone https://github.com/Mkayatw0/smart-legal-assistant.git
-
 cd smart-legal-assistant
-
-
-
-### 2. Set Up Environment Variables
-Create a .env file in the root:
-
-```
-TOGETHER_API_KEY=your_together_api_key
-PINECONE_API_KEY=your_pinecone_api_key
-PINECONE_ENVIRONMENT=your_pinecone_environment
-PINECONE_INDEX_NAME=your_pinecone_index_name
-PINECONE_NAMESPACE=optional_namespace
 ```
 
-These control the external services your app connects to.
+### Step 2: Create Virtual Environment
+```bash
+# Create virtual environment
+python -m venv venv
 
-### 3. Install Dependencies
+# Activate (Mac/Linux)
+source venv/bin/activate
 
-pip install -r requirements.txt
+# Activate (Windows Git Bash)
+source venv/Scripts/activate
+```
 
-This installs all required Python libraries — including: openai, pinecone-client, streamlit, sentence-transformers
+### Step 3: Install Dependencies
+```bash
+# Method 1: Using pyproject.toml (Recommended)
+pip install -e .
 
-### 4. Run the App Locally
+# Method 2: If above fails, install manually
+pip install --upgrade pip
+pip install together pinecone-client python-dotenv streamlit sentence-transformers langchain
+```
 
+### Step 4: Get Your API Keys
+
+#### Together.ai API Key
+1. Go to https://api.together.xyz/
+2. Sign up/login and get your API key
+
+#### Pinecone Setup
+1. Go to https://app.pinecone.io/
+2. Sign up/login to your dashboard
+3. **Find your environment**: Look at top-right corner (e.g., `us-east-1-aws`)
+4. **Create an index**:
+   - Click "Create Index"
+   - Name: `legal-assistant-index`
+   - Dimensions: `1536`
+   - Metric: `cosine`
+   - Pod type: `p1.x1` or `s1.x1`
+
+### Step 5: Configure Environment Variables
+Create a `.env` file in the project root:
+
+```env
+# Together AI (both keys needed - the app checks for both)
+TOGETHER_API_KEY=your_together_api_key_here
+TOGETHER_AI_API_KEY=your_together_api_key_here
+
+# Pinecone Configuration
+PINECONE_API_KEY=your_pinecone_api_key_here
+PINECONE_ENVIRONMENT=us-east-1-aws
+PINECONE_INDEX_NAME=legal-assistant-index
+PINECONE_NAMESPACE=legal-docs
+```
+
+### Step 6: Test Your Setup
+```bash
+# Quick test to verify API keys are loaded
+python -c "
+from dotenv import load_dotenv
+import os
+load_dotenv()
+print('TOGETHER_AI_API_KEY:', 'Found' if os.getenv('TOGETHER_AI_API_KEY') else 'Missing')
+print('PINECONE_API_KEY:', 'Found' if os.getenv('PINECONE_API_KEY') else 'Missing')
+"
+```
+
+### Step 7: Run the Application
+```bash
 streamlit run src/SmartLegalAssistant/streamlit_app/main.py
-
+```
 
 Visit http://localhost:8501 in your browser to use the app.
 
-### Docker Deployment
-Prefer containerization? Here’s how:
+##  Common Issues & Solutions
 
-1. Build the Image
-        docker build -t rag-assistant .
+### Issue 1: `ModuleNotFoundError: No module named 'together'`
+**Solution**: Install missing packages
+```bash
+pip install together pinecone-client python-dotenv
+```
 
-2. Run the App
-        docker run -p 8501:8501 --env-file .env rag-assistant
+### Issue 2: `No such file or directory: venv/bin/activate`
+**Solution**: Create virtual environment first
+```bash
+python -m venv venv
+source venv/bin/activate  # Mac/Linux
+# OR
+source venv/Scripts/activate  # Windows Git Bash
+```
 
-This ensures consistency across environments.
+### Issue 3: `Please provide a Together AI API key`
+**Solution**: Add both API key formats to `.env`
+```env
+TOGETHER_API_KEY=your_key_here
+TOGETHER_AI_API_KEY=your_key_here
+```
 
-### Render Deployment (Cloud Option)
-Push your code to GitHub.
+### Issue 4: `ValueError: invalid literal for int() with base 0: '$PORT'`
+**Solution**: This is a config issue, run with explicit port
+```bash
+streamlit run src/SmartLegalAssistant/streamlit_app/main.py --server.port 8501
+```
 
-Go to Render.com and link your GitHub.
+### Issue 5: Pinecone index not found
+**Solution**: Create index in Pinecone dashboard with correct dimensions (1536)
 
-Choose "New Web Service".
+##  Verification Checklist
 
-Use the render.yaml provided.
+Before running the app, ensure:
+- [ ] Virtual environment is activated (you see `(venv)` in terminal)
+- [ ] All packages installed successfully
+- [ ] `.env` file exists with all required keys
+- [ ] Pinecone index created with correct dimensions
+- [ ] API keys are valid and accessible
 
-Set the .env variables in the Render UI.
+## Docker Deployment
+```bash
+# Build the image
+docker build -t rag-assistant .
+
+# Run the app
+docker run -p 8501:8501 --env-file .env rag-assistant
+```
+
+## Render Deployment (Cloud Option)
+1. Push your code to GitHub
+2. Go to Render.com and link your GitHub
+3. Choose "New Web Service"
+4. Use the render.yaml provided
+5. Set the .env variables in the Render UI
 
 ## How to Use
-Upload legal documents (PDF, .txt, etc.).
+1. Upload legal documents (PDF, .txt, etc.)
+2. Ask your legal question in natural language (e.g. "What are the tenant rights in this lease?")
+3. Get a precise, referenced response from the system
+4. Submit feedback on responses to help improve the model
 
-Ask your legal question in natural language (e.g. "What are the tenant rights in this lease?").
+## Configuration Guide
+| **File** | **What You Can Change** |
+|----------|-------------------------|
+| `prompt_templates.py` | Add/edit prompt response formats |
+| `retriever.py` | Tweak retrieval logic or scoring methods |
+| `reranker.py` | Add reranking models (e.g., Cohere) |
+| `llm.py` | Switch between OpenAI, TogetherAI, etc. |
+| `vector_store.py` | Use Pinecone or other vector DBs |
 
-Get a precise, referenced response from the system.
-
-Submit feedback on responses to help improve the model.
-
-### Configuration Guide
-**File**	**What You Can Change**
-1. prompt_templates.py:	Add/edit prompt response formats
-
-2. retriever.py:	Tweak retrieval logic or scoring methods
-
-3. reranker.py:	Add reranking models (e.g., Cohere)
-
-4. llm.py:	Switch between OpenAI, TogetherAI, etc.
-
-5. vector_store.py:	Use Pinecone or other vector DBs
-
-### Advanced Retrieval Techniques
-Query Expansion: Automatically adds synonyms/related terms to broaden recall.
-
-Result Reranking: Sorts retrieved documents by relevance using another model.
-
-Hybrid Search: Combines keyword + vector search (for best of both worlds).
+## Advanced Retrieval Techniques
+- **Query Expansion**: Automatically adds synonyms/related terms to broaden recall
+- **Result Reranking**: Sorts retrieved documents by relevance using another model
+- **Hybrid Search**: Combines keyword + vector search (for best of both worlds)
 
 ## Customization Guide
-### Add a Prompt Style
-Edit the dictionary in utils/prompt_templates.py:
 
+### Add a Prompt Style
+Edit the dictionary in `utils/prompt_templates.py`:
 
 ```python
 DEFAULT_TEMPLATES["legal_summary"] = """
@@ -159,37 +217,26 @@ You are a legal assistant. Summarize the following content professionally:
 ```
 
 ### Swap Embedding Models
-Create a new class in core/embeddings.py and plug it into the pipeline.
+Create a new class in `core/embeddings.py` and plug it into the pipeline.
 
 ### Use Another Vector Store
-Subclass VectorStore in core/vector_store.py and define your logic (e.g., using FAISS, ChromaDB, etc.).
-
-## Troubleshooting
-Problem	Fix
-ModuleNotFoundError	Activate virtualenv and run pip install -r requirements.txt
-Invalid API Key	Check .env values
-App won’t start	Try: streamlit run src/SmartLegalAssistant/streamlit_app/main.py
-“No documents found” in UI	Upload and index docs before querying
+Subclass VectorStore in `core/vector_store.py` and define your logic (e.g., using FAISS, ChromaDB, etc.).
 
 ## Contributing
 We welcome contributions from learners and professionals alike!
 
-
 1. Fork and clone the project
-git checkout -b feature/my-feature
+2. Create a feature branch: `git checkout -b feature/my-feature`
+3. Make your changes and commit: `git commit -m "Add new feature"`
+4. Push and open a PR on GitHub
 
-2. Make your changes
-git commit -m "Add new feature"
-
-3. Push and open a PR on GitHub
- - Follow PEP8
- - Write clear comments and docstrings
- - Include test cases or examples if possible
+Guidelines:
+- Follow PEP8
+- Write clear comments and docstrings
+- Include test cases or examples if possible
 
 ## License
 This project is licensed under the MIT License.
 
 ## Feedback
-We collect user feedback from the UI to help improve responses. Feedback logs are stored in:
-
-logs/feedback/
+We collect user feedback from the UI to help improve responses. Feedback logs are stored in: `logs/feedback/`

@@ -121,7 +121,7 @@ print('PINECONE_API_KEY:', 'Found' if os.getenv('PINECONE_API_KEY') else 'Missin
 
 ### Step 7: Run the Application
 ```bash
-streamlit run src/SmartLegalAssistant/streamlit_app/main.py
+streamlit run src/SmartLegalAssistant/streamlit_app/app.py
 ```
 
 Visit http://localhost:8501 in your browser to use the app.
